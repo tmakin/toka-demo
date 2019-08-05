@@ -10,6 +10,14 @@ https://tmakin.github.io/toka-demo/
 
 All major browsers are supported including IE11.
 
+### Demo Controls
+The rendered scene supports rotate, zoom and pan:
+```
+Rotate : Left button or arrow keys
+   Pan : Right button or Ctrl + left button
+  Zoom : Wheel
+```
+
 
 # Development #
 ## Prerequisites
