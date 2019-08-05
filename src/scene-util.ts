@@ -1,13 +1,13 @@
-import { Control } from '@babylonjs/gui/2D/controls/control';
 import { AdvancedDynamicTexture } from '@babylonjs/gui/2D/advancedDynamicTexture';
+import { Control } from '@babylonjs/gui/2D/controls/control';
 import { TextBlock } from '@babylonjs/gui/2D/controls/textBlock';
 
 import { ArcRotateCamera } from '@babylonjs/core/Cameras/arcRotateCamera';
 import { Vector3 } from '@babylonjs/core/Maths/math';
-import { Scene } from '@babylonjs/core/scene';
-import { Mesh } from '@babylonjs/core/Meshes/mesh';
 import { LinesMesh } from '@babylonjs/core/Meshes/linesMesh';
+import { Mesh } from '@babylonjs/core/Meshes/mesh';
 import { MeshBuilder } from '@babylonjs/core/Meshes/meshBuilder';
+import { Scene } from '@babylonjs/core/scene';
 
 export class SceneUtil {
 
@@ -20,7 +20,7 @@ export class SceneUtil {
     public static drawLine(scene: Scene, start: Vector3, end: Vector3): LinesMesh {
         const points = [start, end];
         // console.debug('drawLine', points);
-        return MeshBuilder.CreateLines('line', {points: points}, scene);
+        return MeshBuilder.CreateLines('line', {points}, scene);
     }
 
     /**
@@ -30,15 +30,14 @@ export class SceneUtil {
      * @param diameter
      */
     public static drawDot(scene: Scene, position: Vector3, diameter: number = 0.01) {
-        const sphere = Mesh.CreateSphere("sphere", 16, diameter, scene);
+        const sphere = Mesh.CreateSphere('sphere', 16, diameter, scene);
         sphere.position = position;
         // console.debug('drawDot', position, sphere);
         return sphere;
     }
 
-
-    public static createCamera(scene: Scene, intialRadius:number = 1): ArcRotateCamera {
-        const camera = new ArcRotateCamera("Camera", 0, 0, intialRadius, Vector3.Zero(), scene);
+    public static createCamera(scene: Scene, intialRadius: number = 1): ArcRotateCamera {
+        const camera = new ArcRotateCamera('Camera', 0, 0, intialRadius, Vector3.Zero(), scene);
 
         // no clipping plane
         camera.minZ = 0;
@@ -54,19 +53,19 @@ export class SceneUtil {
      * Creates a Gui Texture
      */
     public static createGUI() {
-        return AdvancedDynamicTexture.CreateFullscreenUI("UI");
+        return AdvancedDynamicTexture.CreateFullscreenUI('UI');
     }
- 
+
     /**
-     * 
-     * @param guiTexture 
+     *
+     * @param guiTexture
      */
     public static createInfoTextBlock(guiTexture: AdvancedDynamicTexture): TextBlock {
         const txt = new TextBlock();
-        txt.height = "20px";
-        txt.width = "500px";
+        txt.height = '20px';
+        txt.width = '500px';
         txt.fontSize = 20;
-        txt.text = "Loading...";
+        txt.text = 'Loading...';
         txt.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
         txt.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
         txt.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;

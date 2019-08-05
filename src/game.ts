@@ -3,28 +3,24 @@ import { SceneUtil } from './scene-util';
 // Bablylon files must be imported explicitly for treeshaking to work effectively
 // https://doc.babylonjs.com/features/es6_support#tree-shaking
 
-import { Engine } from "@babylonjs/core/Engines/engine";
+import { Engine } from '@babylonjs/core/Engines/engine';
 import { SceneLoader } from '@babylonjs/core/Loading/sceneLoader';
 
-import { ArcRotateCamera } from '@babylonjs/core/Cameras/arcRotateCamera';
 import { Vector3 } from '@babylonjs/core/Maths/math';
-import { Scene } from '@babylonjs/core/scene';
 import { Mesh } from '@babylonjs/core/Meshes/mesh';
 import { MeshBuilder } from '@babylonjs/core/Meshes/meshBuilder';
+import { Scene } from '@babylonjs/core/scene';
 
-import { StandardMaterial } from '@babylonjs/core/Materials/standardMaterial';
 import { Material } from '@babylonjs/core/Materials/material';
+import { StandardMaterial } from '@babylonjs/core/Materials/standardMaterial';
 import { Texture } from '@babylonjs/core/Materials/Textures/texture';
 
 import { PointLight } from '@babylonjs/core/Lights/pointLight';
 
 import {
     BoundingBox,
-    Ray
+    Ray,
 } from '@babylonjs/core/Culling';
-
-import { TextBlock } from '@babylonjs/gui/2D/controls/textBlock';
-
 
 export class Game {
 
@@ -37,7 +33,7 @@ export class Game {
     private readonly _scene: Scene;
 
     constructor(canvasElementId: string) {
-        this._canvas = <HTMLCanvasElement>document.getElementById(canvasElementId);
+        this._canvas = document.getElementById(canvasElementId) as HTMLCanvasElement;
         this._engine = new Engine(this._canvas, true);
         this._scene = new Scene(this._engine);
     }
@@ -45,7 +41,7 @@ export class Game {
     /**
      * Initialise the BabylyonJs Scene
      */
-    initScene(): void {
+    public initScene(): void {
 
         const scene = this._scene;
 
@@ -56,15 +52,15 @@ export class Game {
         camera.attachControl(this._canvas, true);
 
         // Create omni-directional light
-        const light = new PointLight("Omni", new Vector3(2, 2, 10), scene);
+        const light = new PointLight('Omni', new Vector3(2, 2, 10), scene);
 
         // Init decal material from the logo file
-        const decalMat = new StandardMaterial("DecalMat", scene);
+        const decalMat = new StandardMaterial('DecalMat', scene);
         decalMat.diffuseTexture = new Texture(this.createAssetUrl(this._logoFileName), scene);
         decalMat.diffuseTexture.hasAlpha = true;
         decalMat.zOffset = -2;
 
-        const decalAspectRatio: number = 1/8; // Based on the logo dimensions
+        const decalAspectRatio: number = 1 / 8; // Based on the logo dimensions
         const decalSize = 0.05; // TODO: scale with the bounding box
 
         // Init GUI
@@ -74,7 +70,6 @@ export class Game {
         const setInfo = (msg: string) => {
             infoTxtBlock.text = msg;
         };
-
 
         // Import the main mesh file
         SceneLoader.ImportMesh(null, this._assetUrl, this._modelName, scene, (newMeshes) => {
@@ -99,9 +94,9 @@ export class Game {
             // Update the info box
             setInfo(this._modelName);
 
-        }, args => {
-            const progress = args.loaded/args.total;
-            const percent = Math.round(progress*100);
+        }, (args) => {
+            const progress = args.loaded / args.total;
+            const percent = Math.round(progress * 100);
             // console.debug('updateProgressInfo',progress, percent);
             setInfo(`Loading (${percent}%)`);
         });
@@ -113,11 +108,10 @@ export class Game {
         });
     }
 
-
     /**
      * Start the animation loop.
      */
-    animate(): void {
+    public animate(): void {
 
         // run the render loop
         this._engine.runRenderLoop(() => {
@@ -134,7 +128,7 @@ export class Game {
      * Create an asset url for the given file name
      * @param name
      */
-    createAssetUrl(name: string): string {
+    private createAssetUrl(name: string): string {
         return this._assetUrl + name;
     }
 
@@ -147,10 +141,10 @@ export class Game {
      * @param aspectRatio
      * @param depth
      */
-    drawTopDecal(bb: BoundingBox, decalMat: Material, size: number, aspectRatio: number = 1.0, depth: number = 0.05): Mesh {
+    private drawTopDecal(bb: BoundingBox, decalMat: Material, size: number, aspectRatio: number = 1.0, depth: number = 0.05): Mesh {
 
         // ray generation
-        const direction = new Vector3(0,-1,0); // project downwards from offset point
+        const direction = new Vector3(0, -1, 0); // project downwards from offset point
         const origin = new Vector3(bb.center.x, bb.maximum.y, bb.center.z); // ray origin is at top of bounding box
         const ray = new Ray(origin, direction, 1);
 
@@ -159,18 +153,18 @@ export class Game {
         // intersect ray with current scene
         const hitResult = this._scene.pickWithRay(ray);
 
-        if(!hitResult.hit) {
+        if (!hitResult.hit) {
             console.warn('decal hit test failed', hitResult);
             return;
         }
 
-        const decalSize = new Vector3(size, aspectRatio*size, depth);
+        const decalSize = new Vector3(size, aspectRatio * size, depth);
 
-        const newDecal = MeshBuilder.CreateDecal("decal", hitResult.pickedMesh, {
-            position: hitResult.pickedPoint,
+        const newDecal = MeshBuilder.CreateDecal('decal', hitResult.pickedMesh, {
+            angle: -45 * Math.PI / 180, // TODO: work out why 45 degree rotation is required
             normal: hitResult.getNormal(true),
+            position: hitResult.pickedPoint,
             size: decalSize,
-            angle: -45*Math.PI/180 //TODO: work out why 45 degree rotation is required
         });
 
         // assign material to new decal

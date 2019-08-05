@@ -75,7 +75,7 @@ https://doc.babylonjs.com/features/es6_support#tree-shaking
 To view the contents of the bundle use:
 ```
 npm run build:stats
-webpack-bundle-analyser stats.json
+webpack-bundle-analyzer stats.json
 ```
 
 ## Refs:
