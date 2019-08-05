@@ -5,7 +5,9 @@
   "scripts": {
     "build": "webpack --config webpack.config.prod.js",
     "build:stats": "webpack --config webpack.config.prod.js --profile --json > stats.json",
-    "start": "webpack-dev-server --open --config webpack.config.dev.js"
+    "start": "webpack-dev-server --open --config webpack.config.dev.js",
+    "deploy": "gh-pages --dist dist",
+    "publish": "npm run build && npm run deploy"
   },
   "keywords": [],
   "author": "",
@@ -16,13 +18,13 @@
     "@babylonjs/loaders": "4.0.3",
     "clean-webpack-plugin": "3.0.0",
     "copy-webpack-plugin": "5.0.4",
-    "gh-pages": "2.1.0",
+    "gh-pages": "2.0.1",
     "html-webpack-plugin": "3.2.0",
     "ts-loader": "6.0.4",
     "typescript": "3.5.3",
     "webpack": "4.39.1",
     "webpack-bundle-analyzer": "3.4.1",
     "webpack-cli": "3.3.6",
-    "webpack-dev-server": "^3.7.2"
+    "webpack-dev-server": "3.7.2"
   }
 }
