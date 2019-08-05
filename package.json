@@ -7,7 +7,9 @@
     "build:stats": "webpack --config webpack.config.prod.js --profile --json > stats.json",
     "start": "webpack-dev-server --open --config webpack.config.dev.js",
     "deploy": "gh-pages --dist dist",
-    "publish": "npm run build && npm run deploy"
+    "publish": "npm run build && npm run deploy",
+    "lint": "tslint -c tslint.json 'src/**/*.ts'",
+    "lint:fix": "tslint --fix -c tslint.json 'src/**/*.ts'"
   },
   "keywords": [],
   "author": "",
