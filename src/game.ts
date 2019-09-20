@@ -1,26 +1,7 @@
+import * as Babylon from './babylon-core';
+
 import { SceneUtil } from './scene-util';
 
-// Bablylon files must be imported explicitly for treeshaking to work effectively
-// https://doc.babylonjs.com/features/es6_support#tree-shaking
-
-import { Engine } from '@babylonjs/core/Engines/engine';
-import { SceneLoader } from '@babylonjs/core/Loading/sceneLoader';
-
-import { Vector3 } from '@babylonjs/core/Maths/math';
-import { Mesh } from '@babylonjs/core/Meshes/mesh';
-import { MeshBuilder } from '@babylonjs/core/Meshes/meshBuilder';
-import { Scene } from '@babylonjs/core/scene';
-
-import { Material } from '@babylonjs/core/Materials/material';
-import { StandardMaterial } from '@babylonjs/core/Materials/standardMaterial';
-import { Texture } from '@babylonjs/core/Materials/Textures/texture';
-
-import { PointLight } from '@babylonjs/core/Lights/pointLight';
-
-import {
-    BoundingBox,
-    Ray,
-} from '@babylonjs/core/Culling';
 
 export class Game {
 
@@ -29,13 +10,13 @@ export class Game {
     private readonly _logoFileName = 'logo.png';
 
     private readonly _canvas: HTMLCanvasElement;
-    private readonly _engine: Engine;
-    private readonly _scene: Scene;
+    private readonly _engine: Babylon.Engine;
+    private readonly _scene: Babylon.Scene;
 
     constructor(canvasElementId: string) {
         this._canvas = document.getElementById(canvasElementId) as HTMLCanvasElement;
-        this._engine = new Engine(this._canvas, true);
-        this._scene = new Scene(this._engine);
+        this._engine = new Babylon.Engine(this._canvas, true);
+        this._scene = new Babylon.Scene(this._engine);
     }
 
     /**
@@ -52,11 +33,11 @@ export class Game {
         camera.attachControl(this._canvas, true);
 
         // Create omni-directional light
-        const light = new PointLight('Omni', new Vector3(2, 2, 10), scene);
+        const light = new Babylon.PointLight('Omni', new Babylon.Vector3(2, 2, 10), scene);
 
         // Init decal material from the logo file
-        const decalMat = new StandardMaterial('DecalMat', scene);
-        decalMat.diffuseTexture = new Texture(this.createAssetUrl(this._logoFileName), scene);
+        const decalMat = new Babylon.StandardMaterial('DecalMat', scene);
+        decalMat.diffuseTexture = new Babylon.Texture(this.createAssetUrl(this._logoFileName), scene);
         decalMat.diffuseTexture.hasAlpha = true;
         decalMat.zOffset = -2;
 
@@ -72,7 +53,7 @@ export class Game {
         };
 
         // Import the main mesh file
-        SceneLoader.ImportMesh(null, this._assetUrl, this._modelName, scene, (newMeshes) => {
+        Babylon.SceneLoader.ImportMesh(null, this._assetUrl, this._modelName, scene, (newMeshes) => {
 
             // Use first imported mesh object
             const mesh = newMeshes[0];
@@ -141,12 +122,12 @@ export class Game {
      * @param aspectRatio
      * @param depth
      */
-    private drawTopDecal(bb: BoundingBox, decalMat: Material, size: number, aspectRatio: number = 1.0, depth: number = 0.05): Mesh {
+    private drawTopDecal(bb: Babylon.BoundingBox, decalMat: Babylon.Material, size: number, aspectRatio: number = 1.0, depth: number = 0.05): Babylon.Mesh {
 
         // ray generation
-        const direction = new Vector3(0, -1, 0); // project downwards from offset point
-        const origin = new Vector3(bb.center.x, bb.maximum.y, bb.center.z); // ray origin is at top of bounding box
-        const ray = new Ray(origin, direction, 1);
+        const direction = new Babylon.Vector3(0, -1, 0); // project downwards from offset point
+        const origin = new Babylon.Vector3(bb.center.x, bb.maximum.y, bb.center.z); // ray origin is at top of bounding box
+        const ray = new Babylon.Ray(origin, direction, 1);
 
         // SceneUtil.drawLine(this._scene, origin, origin.add(direction));
 
@@ -158,9 +139,9 @@ export class Game {
             return;
         }
 
-        const decalSize = new Vector3(size, aspectRatio * size, depth);
+        const decalSize = new Babylon.Vector3(size, aspectRatio * size, depth);
 
-        const newDecal = MeshBuilder.CreateDecal('decal', hitResult.pickedMesh, {
+        const newDecal = Babylon.MeshBuilder.CreateDecal('decal', hitResult.pickedMesh, {
             angle: -45 * Math.PI / 180, // TODO: work out why 45 degree rotation is required
             normal: hitResult.getNormal(true),
             position: hitResult.pickedPoint,
